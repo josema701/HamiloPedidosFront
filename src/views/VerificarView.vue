@@ -36,7 +36,7 @@
 
         <div class="row justify-content-center mt-3">
             <div class="col-md-6 col-6 p-1">
-                <button class="btn btn-dark btn-block">Verificar</button>
+                <button @click="verificar()" class="btn btn-dark btn-block">Verificar</button>
             </div>
         </div>
 
@@ -48,18 +48,60 @@
 </template>
 
 <script setup>
-    import { RouterLink } from 'vue-router';
+    import { RouterLink, useRouter } from 'vue-router';
     import VOtpInput from "vue3-otp-input";
-    import { ref } from 'vue';
+    import { ref, onMounted } from 'vue';
     import InstanceType from 'vue3-otp-input';
+    import axios from 'axios';
 
     const otpInput = ref<InstanceType<typeof VOtpInput> null>(null);
 
+    let urlBase = 'http://hamilopedidos.test/api';
+    const router = useRouter();
+
     const otp = ref('');
+
+    const token = ref('');
+
+    onMounted(() => {
+        token.value = localStorage.getItem('token');
+        if(token.value == null || token.value == '' || token.value == undefined){
+            router.push({path: '/register'});
+        }
+    });
 
     const completado = () => {
         console.log(otp.value);
     }
+
+    const verificar = async() => {
+        if(otp.value == ''){
+            alert('Ingresa el codigo de verificación!');
+            return;
+        }
+        token.value = localStorage.getItem('token');
+
+        try {
+            const { data } = await axios.post(urlBase + '/verificar', {
+                                        otp: otp.value,
+                                    },{
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Accept': 'application/json',
+                                            'Authorization': 'Bearer ' + token.value,
+                                        }
+                                    });
+            // console.log(data);
+            let usuario = data.usuario;
+            localStorage.setItem('usuario', JSON.stringify(usuario));
+
+            if(usuario.verificado == true){
+                router.push({path: '/inicio'});
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    } 
 
 </script>
 

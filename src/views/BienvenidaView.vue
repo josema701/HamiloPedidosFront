@@ -28,7 +28,24 @@
 </template>
 
 <script setup>
-    import { RouterLink } from 'vue-router';
+    import { RouterLink, useRouter } from 'vue-router';
+    import { onMounted } from 'vue';
+
+    const router = useRouter();
+
+    onMounted( () => {
+        let token = localStorage.getItem('token');
+        let usuario = JSON.parse(localStorage.getItem('usuario'));
+
+        if(token == null || token == '' || token == undefined ||
+            usuario == null || usuario == '' || usuario == undefined
+        ){
+            localStorage.clear(); // borrar todo el localStorage
+        } else {
+            router.push({path: '/inicio'});
+        }
+    });
+
 </script>
 
 <style scoped>

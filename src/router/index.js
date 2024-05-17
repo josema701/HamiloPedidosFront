@@ -6,6 +6,8 @@ import InicioView from '../views/InicioView.vue'
 import ProductosView from '../views/ProductosView.vue'
 import CarritoView from '../views/CarritoView.vue'
 import VerificarView from '../views/VerificarView.vue'
+import HistorialView from '../views/HistorialView.vue'
+import PerfilView from '../views/PerfilView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +46,16 @@ const router = createRouter({
       path: '/carrito',
       name: 'carrito',
       component: CarritoView
+    },
+    {
+      path: '/historial',
+      name: 'historial',
+      component: HistorialView
+    },
+    {
+      path: '/perfil',
+      name: 'perfil',
+      component: PerfilView
     },
 
 

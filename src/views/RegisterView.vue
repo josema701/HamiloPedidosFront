@@ -94,7 +94,7 @@
             let token = data.token;
 
             localStorage.setItem('usuario', JSON.stringify(usuario));
-            localStorage.setItem('token', JSON.stringify(token));
+            localStorage.setItem('token', token);
 
             router.push({path: '/verificar'});
         } catch (error){

@@ -33,9 +33,14 @@ const negocios = ref([]);
 const siguienteUrl = ref(null);
 
 const router = useRouter();
+const token = ref('');
 
 onMounted( () => {
     cargarDatos();
+    token.value = localStorage.getItem('token');
+    if(token.value == null || token.value == '' || token.value == undefined){
+        router.push({path: '/'});
+    }
 });
 
 const cargarDatos = async () => {

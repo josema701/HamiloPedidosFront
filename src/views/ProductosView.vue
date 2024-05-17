@@ -43,7 +43,7 @@
         </div>
 
         <div v-if="carrito.length > 0" class="floating">
-            <button @click="verCarrito()" class="btn btn-dark" >Mi carrito <b>({{ carrito.length }})</b> </button>
+            <button @click="verCarrito()" class="btn btn-dark " >Mi carrito <b>({{ carrito.length }})</b> </button>
         </div>
 
     </div>
@@ -64,11 +64,19 @@
     const siguienteUrl = ref(null);
     const carrito = ref([]);
 
+    const token = ref('');
+
     const router = useRouter();
 
     let negocio_id = router.currentRoute.value.params.id;
 
     onMounted( () => {
+
+        token.value = localStorage.getItem('token');
+        if(token.value == null || token.value == '' || token.value == undefined){
+            router.push({path: '/'});
+        }
+
         // limpiar el localStorage carrito
         localStorage.removeItem('carrito');
         localStorage.setItem('negocio_id', negocio_id);

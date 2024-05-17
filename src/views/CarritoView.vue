@@ -51,15 +51,27 @@
 import MenuComponent from '../components/MenuComponent.vue';
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
-
+import { useRouter } from 'vue-router';
+ 
 const carrito = ref([]);
 const total = ref(0);
 const comentarios = ref('');
 const coordenadas = ref('');
-
+const token = ref('');
+const usuario = ref({});
 let urlBase = 'http://hamilopedidos.test/api';
+const router = useRouter();
 
 onMounted(() => {
+    token.value = localStorage.getItem('token');
+    usuario.value = JSON.parse(localStorage.getItem('usuario'));
+
+    if(token.value == null || token.value == '' || token.value == undefined ||
+        usuario.value == null || usuario.value == '' || usuario.value == undefined
+    ){
+        router.push({path: '/'});
+    }
+
     carrito.value = localStorage.getItem('carrito') ? JSON.parse(localStorage.getItem('carrito')) : [];
     calcularTotal();
 
@@ -108,7 +120,7 @@ const enviarPedido = async () => {
 
     // enviar pedido al servidor /pedidos/registrar
     let objeto = {
-        cliente_id: 1,
+        cliente_id: usuario.value.id,
         negocio_id: negocio_id,
         total: total.value,
         comentarios: comentarios.value,
@@ -125,6 +137,13 @@ const enviarPedido = async () => {
         });
 
         console.log(data);
+
+        // limpiar el carrito, y la negocio_id
+        localStorage.removeItem('carrito');
+        localStorage.removeItem('negocio_id');
+
+        router.push({path: '/inicio'});
+
 
     } catch (error) {
         console.log(error);
